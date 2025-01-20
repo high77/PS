@@ -2,98 +2,97 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N,M,K;
-    static int[] dx = {-1,-1,-1,0,0,1,1,1},dy = {-1,0,1,-1,1,-1,0,1};
-    static int[][] A,land,tmp2;
-    static PriorityQueue<Tree> tree;
-    static class Tree implements Comparable<Tree> {
-        int x;
-        int y;
-        int age;
-        Tree(int x,int y,int age){
-            this.x=x;
-            this.y=y;
-            this.age=age;
-        }
-        @Override
-        public int compareTo(Tree o) {
-            return Integer.compare(this.age,o.age);
-        }
+    static int N, M, K;
+    static int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1}, dy = {-1, 0, 1, -1, 1, -1, 0, 1};
+    static int[][] A, land, deadNutrients;
+    static List<Tree> trees;
 
-    }
+    static class Tree {
+        int x, y, age;
 
-    static void spring(){
-        PriorityQueue<Tree> tmp = new PriorityQueue<>();
-        tmp2 = new int[N][N];
-        while (!tree.isEmpty()){
-            Tree t = tree.poll();
-            if (land[t.x][t.y]<t.age) {
-                tmp2[t.x][t.y]+=t.age/2;
-                continue;
-            }
-            land[t.x][t.y]-=t.age;
-            tmp.offer(new Tree(t.x,t.y,t.age+1));
-        }
-        tree = tmp;
-    }
-
-    static void summer(){
-        for (int i=0;i<N;i++){
-            for (int j=0;j<N;j++) land[i][j]+=tmp2[i][j];
+        Tree(int x, int y, int age) {
+            this.x = x;
+            this.y = y;
+            this.age = age;
         }
     }
 
-    static void fall(){
-        PriorityQueue<Tree> tmp = new PriorityQueue<>();
-        while (!tree.isEmpty()){
-            Tree t = tree.poll();
-            tmp.offer(t);
-            if (t.age%5!=0) continue;
-            for (int d=0;d<8;d++){
-                int x=t.x+dx[d], y=t.y+dy[d];
-                if (x<0 || y<0 || x>=N || y>=N) continue;
-                tmp.offer(new Tree(x,y,1));
+    static void springAndSummer() {
+        deadNutrients = new int[N][N];
+        List<Tree> aliveTrees = new ArrayList<>();
+
+        for (Tree t : trees) {
+            if (land[t.x][t.y] >= t.age) {
+                land[t.x][t.y] -= t.age;
+                aliveTrees.add(new Tree(t.x, t.y, t.age + 1));
+            } else {
+                deadNutrients[t.x][t.y] += t.age / 2;
             }
         }
-        tree = tmp;
+
+        trees = aliveTrees; // 살아남은 트리들만 유지
     }
 
-    static void winter(){
-        for (int i=0;i<N;i++){
-            for (int j=0;j<N;j++) land[i][j] += A[i][j];
+    static void fall() {
+        List<Tree> newTrees = new ArrayList<>();
+
+        for (Tree t : trees) {
+            if (t.age % 5 == 0) {
+                for (int d = 0; d < 8; d++) {
+                    int x = t.x + dx[d], y = t.y + dy[d];
+                    if (x < 0 || y < 0 || x >= N || y >= N) continue;
+                    newTrees.add(new Tree(x, y, 1));
+                }
+            }
+        }
+
+        trees.addAll(0, newTrees); // 새로 자란 트리를 앞에 추가
+    }
+
+    static void winter() {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                land[i][j] += A[i][j] + deadNutrients[i][j];
+            }
         }
     }
-
-
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder ans = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
+
         A = new int[N][N];
         land = new int[N][N];
+        trees = new LinkedList<>();
+
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
                 A[i][j] = Integer.parseInt(st.nextToken());
-                land[i][j] = 5;
+                land[i][j] = 5; // 초기 양분 설정
             }
         }
-        tree = new PriorityQueue<>();
+
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            tree.offer(new Tree(Integer.parseInt(st.nextToken())-1,Integer.parseInt(st.nextToken())-1,Integer.parseInt(st.nextToken())));
+            int x = Integer.parseInt(st.nextToken()) - 1;
+            int y = Integer.parseInt(st.nextToken()) - 1;
+            int age = Integer.parseInt(st.nextToken());
+            trees.add(new Tree(x, y, age));
         }
-        for (int i = 0; i < K; i++) {
-            spring();
-            summer();
+
+        // 초기 정렬
+        trees.sort(Comparator.comparingInt(t -> t.age));
+
+        for (int year = 0; year < K; year++) {
+            springAndSummer();
             fall();
             winter();
         }
-        ans.append(tree.size());
-        System.out.println(ans);
+
+        System.out.println(trees.size());
     }
 }
