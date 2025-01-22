@@ -1,60 +1,56 @@
+import java.util.StringTokenizer;
 import java.io.*;
-import java.util.*;
-
 public class Main {
     static int N,K,res;
-    static int[] list;
-    static char[] charList ;
-    static HashSet<Integer>[] arr = new HashSet[26];
+    static int[] words;    
 
-    static void f(int k,int i){
-        int tmp=0;
-        for (int n=0;n<N;n++){
-            if (list[n]==0) tmp++;
+    public static int toBit(String s) {
+        int bit = 0;
+        for(int i = 4; i<s.length()-4; i++) {
+            char c = s.charAt(i);
+            bit |= (1 << c - 'a');
         }
-        res = Math.max(res,tmp);
-
-        if (k==K) return;
-        if (i==charList.length) return;
-
-        f(k,i+1);
-        for (int n:arr[charList[i]-'a']) list[n]--;
-        f(k+1,i+1);
-        for (int n:arr[charList[i]-'a']) list[n]++;
+        return bit;
     }
 
+    public static void dfs(int k, int m, int start) {
+        if(k == K) {
+            int tmp = 0;
+            for(int word : words) {
+                if((m & word) == word) tmp++;
+            }
+            res = Math.max(res, tmp);
+            return;
+        }
+        for(int i = start; i<26; i++) {
+            int bit = (1 << i);
+            if((m & bit) == 0) dfs(k + 1, m | bit, i + 1);
+        }
+    }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder ans = new StringBuilder();
-        res = 0;
         StringTokenizer st = new StringTokenizer(br.readLine());
+        res = 0;
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
-        list = new int[N];
+        words = new int[N];
+        int mask = 1 | (1 << 'n' - 'a') | (1 << 't' - 'a') | (1 << 'i' - 'a') | (1 << 'c' - 'a');
+        for(int i = 0; i<N; i++) {
+            String s = br.readLine();
+            words[i] = mask | toBit(s);
+        }
+
         if (K==26) ans.append(N);
         else if (K<5) ans.append(0);
         else {
             K-=5;
-            for (int i = 0; i < 26; i++) arr[i] = new HashSet<>();
-            HashSet<Character> set = new HashSet<>();
-            for (int i = 0; i < N; i++) {
-                String S = br.readLine();
-                HashSet<Character> tmp = new HashSet<>();
-                for (char c : S.toCharArray()) {
-                    if (c=='a' || c=='n' || c=='t' || c=='i' || c=='c') continue;
-                    set.add(c);
-                    tmp.add(c);
-                    arr[c-'a'].add(i);
-                }
-                list[i] = tmp.size();
-            }
-            charList = new char[set.size()];
-            int i = 0;
-            for (char c : set) charList[i++] = c;
-            f(0,0);
+            dfs(0, mask, 0);
             ans.append(res);
         }
         System.out.println(ans);
     }
+
+
 }
