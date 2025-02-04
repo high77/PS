@@ -6,10 +6,11 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder ans  = new StringBuilder();
         int T = Integer.parseInt(br.readLine());
+        Deque<Character> dq;
         while (T-- > 0) {
             int N = Integer.parseInt(br.readLine());
             String[] input = br.readLine().split(" ");
-            Deque<Character> dq = new ArrayDeque<>();
+            dq = new ArrayDeque<>();
             char tmp = input[0].charAt(0);
             dq.add(tmp);
             for (int i =1 ; i < N ; i++) {
