@@ -8,13 +8,13 @@ public class Main {
         StringBuilder ans = new StringBuilder();
         StringTokenizer st;
         int T = Integer.parseInt(br.readLine());
+        int[] list = new int[1000001];
         while (T-- > 0) {
             st = new StringTokenizer(br.readLine());
             int N = Integer.parseInt(st.nextToken()), K = Integer.parseInt(st.nextToken());
-            int[] list = new int[N];
             st = new StringTokenizer(br.readLine());
             for (int i = 0; i < N; i++) list[i] = Integer.parseInt(st.nextToken());
-            Arrays.sort(list);
+            Arrays.sort(list, 0, N);
             int cnt =0,res=Integer.MAX_VALUE;
             for (int i = 0; i < N; i++) {
                 int s=i+1,e = N;
