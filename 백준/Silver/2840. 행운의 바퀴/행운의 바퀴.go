@@ -19,7 +19,7 @@ func main() {
 	for i := range res {
 		res[i] = '?'
 	}
-	alpha := make(map[rune]bool)
+	alpha := make(map[rune]struct{})
 
 	idx := 0
 	for i := 0; i < K; i++ {
@@ -28,21 +28,22 @@ func main() {
 		a, _ := strconv.Atoi(tokens[0])
 		b := rune(tokens[1][0])
 
-		idx = (N + idx - (a % N)) % N
+		idx = (idx - (a % N) + N) % N
 		if res[idx] == b {
 			continue
 		}
-		if res[idx] != '?' || alpha[b] {
+		if res[idx] != '?' {
 			fmt.Println("!")
 			return
 		}
-		alpha[b] = true
+		_, exists := alpha[b]
+		if exists {
+			fmt.Println("!")
+			return
+		}
+		alpha[b] = struct{}{}
 		res[idx] = b
 	}
 
-	var ans strings.Builder
-	for i := 0; i < N; i++ {
-		ans.WriteRune(res[(idx+i)%N])
-	}
-	fmt.Println(ans.String())
+	fmt.Println(string(append(res[idx:], res[:idx]...)))
 }
