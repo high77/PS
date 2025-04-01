@@ -6,15 +6,24 @@ import (
 	"os"
 )
 
-var br = bufio.NewReader(os.Stdin)
+var in = bufio.NewScanner(os.Stdin)
+
+func nextInt() int {
+	in.Scan()
+	r := 0
+	for _, c := range in.Bytes() {
+		r *= 10
+		r += int(c - '0')
+	}
+	return r
+}
 
 func main() {
-	var S, C int
-	fmt.Fscan(br, &S, &C)
-	sum := 0
+	in.Split(bufio.ScanWords)
+	S, C, sum := nextInt(), nextInt(), 0
 	list := make([]int, S)
 	for i := 0; i < S; i++ {
-		fmt.Fscan(br, &list[i])
+		list[i] = nextInt()
 		sum += list[i]
 	}
 	var s, e int = 0, sum
