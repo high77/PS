@@ -26,9 +26,9 @@ func main() {
 		list[i] = nextInt()
 		sum += list[i]
 	}
-	var s, e int = 0, sum / C+1
+	s, e := 0, sum/C+1
 	for s < e {
-		var mid, cnt = (s + e) / 2, 0
+		mid, cnt := (s+e)/2, 0
 		for i := 0; i < S; i++ {
 			cnt += list[i] / mid
 		}
