@@ -29,8 +29,8 @@ func main() {
 	s, e := 0, sum/C+1
 	for s < e {
 		mid, cnt := (s+e)/2, 0
-		for i := 0; i < S; i++ {
-			cnt += list[i] / mid
+		for _, n := range list {
+			cnt += n / mid
 		}
 		if cnt >= C {
 			s = mid + 1
