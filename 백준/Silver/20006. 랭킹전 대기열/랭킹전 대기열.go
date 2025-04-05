@@ -9,9 +9,14 @@ import (
 	"strings"
 )
 
-type Team struct {
+type Player struct {
+	name  string
 	level int
-	names []string
+}
+
+type Team struct {
+	level  int
+	members []Player
 }
 
 func main() {
@@ -19,47 +24,47 @@ func main() {
 	writer := bufio.NewWriter(os.Stdout)
 	defer writer.Flush()
 
-	// 첫 줄 입력 처리
+	// 입력 읽기
 	input, _ := reader.ReadString('\n')
-	input = strings.TrimSpace(input)
-	tokens := strings.Split(input, " ")
+	tokens := strings.Fields(input)
 	p, _ := strconv.Atoi(tokens[0])
 	m, _ := strconv.Atoi(tokens[1])
 
 	var teams []Team
-	players := make(map[string]int)
 
 	for i := 0; i < p; i++ {
 		line, _ := reader.ReadString('\n')
-		line = strings.TrimSpace(line)
-		tokens = strings.Split(line, " ")
+		tokens := strings.Fields(line)
 		l, _ := strconv.Atoi(tokens[0])
 		n := tokens[1]
-		players[n] = l
+		player := Player{name: n, level: l}
 
-		flag := false
+		assigned := false
 		for i := range teams {
-			if l >= teams[i].level-10 && l <= teams[i].level+10 && len(teams[i].names) < m {
-				teams[i].names = append(teams[i].names, n)
-				flag = true
+			if l >= teams[i].level-10 && l <= teams[i].level+10 && len(teams[i].members) < m {
+				teams[i].members = append(teams[i].members, player)
+				assigned = true
 				break
 			}
 		}
-		if !flag {
-			teams = append(teams, Team{level: l, names: []string{n}})
+		if !assigned {
+			teams = append(teams, Team{level: l, members: []Player{player}})
 		}
 	}
 
 	for _, team := range teams {
-		if len(team.names) < m {
+		if len(team.members) < m {
 			fmt.Fprintln(writer, "Waiting!")
 		} else {
 			fmt.Fprintln(writer, "Started!")
 		}
 
-		sort.Strings(team.names)
-		for _, name := range team.names {
-			fmt.Fprintf(writer, "%d %s\n", players[name], name)
+		sort.Slice(team.members, func(i, j int) bool {
+			return team.members[i].name < team.members[j].name
+		})
+
+		for _, player := range team.members {
+			fmt.Fprintf(writer, "%d %s\n", player.level, player.name)
 		}
 	}
 }
