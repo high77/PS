@@ -24,7 +24,7 @@ func main() {
 	bw := bufio.NewWriter(os.Stdout)
 	defer bw.Flush()
 	var N int
-	fmt.Fscan(br, &N)
+	fmt.Fscanln(br, &N)
 
 	n := new(big.Int).Lsh(big.NewInt(1), uint(N))
 	n.Sub(n, big.NewInt(1))
