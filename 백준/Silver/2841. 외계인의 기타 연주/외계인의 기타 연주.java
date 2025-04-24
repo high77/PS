@@ -8,8 +8,8 @@ public class Main{
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken())
                 , P = Integer.parseInt(st.nextToken()), ans=0;
-        Stack<Integer>[] stack = new Stack[N+1];
-        for (int i = 0; i <= N; i++) stack[i] = new Stack<>();
+        Stack<Integer>[] stack = new Stack[7];
+        for (int i = 0; i < 7; i++) stack[i] = new Stack<>();
         for (int i = 0; i < N; i++){
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken())
