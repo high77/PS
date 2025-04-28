@@ -20,6 +20,8 @@ func nextInt() int {
 
 func main() {
 	in.Split(bufio.ScanWords)
+	bw := bufio.NewWriter(os.Stdout)
+	defer bw.Flush()
 	N, M := nextInt(), nextInt()
 	list := make([]int, N+1)
 	arr := make([][]int, N+1)
@@ -47,7 +49,7 @@ func main() {
 	for len(q) > 0 {
 		now := q[0]
 		if visit[now] {
-			fmt.Println(0)
+			fmt.Fprintln(bw,0)
 			return
 		}
 		ans = append(ans, now)
@@ -63,10 +65,11 @@ func main() {
 
 	if len(ans) == N {
 		for _, i := range ans {
-			fmt.Println(i)
+			fmt.Fprintln(bw,i)
+
 		}
 	} else {
-		fmt.Println(0)
+		fmt.Fprintln(bw,0)
 	}
 
 }
