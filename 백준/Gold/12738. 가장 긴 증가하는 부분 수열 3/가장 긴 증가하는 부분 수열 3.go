@@ -4,26 +4,15 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 var in = bufio.NewScanner(os.Stdin)
 
-func nextInt() int {
+func scanInt() int {
 	in.Scan()
-	r := 0
-	flag := false
-	for _, c := range in.Bytes() {
-		if c == '-' {
-			flag = true
-			continue
-		}
-		r *= 10
-		r += int(c - '0')
-	}
-	if flag {
-		r = -r
-	}
-	return r
+	n, _ := strconv.Atoi(in.Text())
+	return n
 }
 
 func main() {
@@ -31,17 +20,17 @@ func main() {
 	bw := bufio.NewWriter(os.Stdout)
 	defer bw.Flush()
 
-	N := nextInt()
-	list := make([]int, N)
-	for i := 0; i < N; i++ {
-		list[i] = nextInt()
-	}
+	N := scanInt()
 
 	LIS := make([]int, 1000001)
-	LIS[0] = list[0]
-	idx := 1
-	for i := 1; i < N; i++ {
-		n := list[i]
+	idx := 0
+	for i := 0; i < N; i++ {
+		n := scanInt()
+		if i == 0 {
+			LIS[idx] = n
+			idx++
+			continue
+		}
 		if LIS[idx-1] < n {
 			LIS[idx] = n
 			idx++
