@@ -4,15 +4,24 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 var in = bufio.NewScanner(os.Stdin)
 
+//func nextInt() int {
+//	in.Scan()
+//	n, _ := strconv.Atoi(in.Text())
+//	return n
+//}
+
 func nextInt() int {
 	in.Scan()
-	n, _ := strconv.Atoi(in.Text())
-	return n
+	r := 0
+	for _, c := range in.Bytes() {
+		r *= 10
+		r += int(c - '0')
+	}
+	return r
 }
 
 func main() {
