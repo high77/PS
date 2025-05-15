@@ -3,39 +3,38 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        // 입력 처리
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         int n = Integer.parseInt(st.nextToken());
         int k = Integer.parseInt(st.nextToken());
 
-        // 입력 값 리스트
-        List<Integer> x = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            x.add(Integer.parseInt(br.readLine()));
+        int[] levels = new int[n];
+
+        long max = Integer.MAX_VALUE;
+        long min = Integer.MAX_VALUE;
+
+
+        for (int i = 0; i < n; i++){
+            levels[i] = Integer.parseInt(br.readLine());
+            min = Math.min(min, levels[i]);
         }
-
-        // 내림차순 정렬
-        x.sort(Collections.reverseOrder());
-
-        int nest = 1;
-        while (k > 0 && x.size() > 1) {
-            int diff = x.get(x.size() - 2) - x.get(x.size() - 1);
-            int cost = diff * nest;
-
-            if (cost <= k) {
-                k -= cost;
-                nest++;
-                x.remove(x.size() - 1);
+        long answer = 0;
+        while (min <= max) {
+            long mid = (max + min) / 2;
+            long sum = 0;
+            for (int i = 0; i < n; i++) {
+                if (mid >= levels[i]) {
+                    sum += mid - levels[i];
+                }
+            }
+            if (k >= sum) {
+                min = mid + 1;
+                answer = Math.max(answer, mid);
             } else {
-                break;
+                max = mid - 1;
             }
         }
-
-        // 마지막 값에 나눠서 분배
-        int lastIndex = x.size() - 1;
-        x.set(lastIndex, x.get(lastIndex) + k / nest);
-
-        System.out.println(x.get(lastIndex));
+        System.out.println(answer);
     }
 }
