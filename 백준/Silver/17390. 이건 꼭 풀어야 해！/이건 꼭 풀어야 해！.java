@@ -22,7 +22,7 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int L = Integer.parseInt(st.nextToken()), R = Integer.parseInt(st.nextToken());
 
-            ans.append(sum[R]-sum[L-1]+"\n");
+            ans.append(sum[R]-sum[L-1]).append("\n");
         }
 
         System.out.println(ans);
