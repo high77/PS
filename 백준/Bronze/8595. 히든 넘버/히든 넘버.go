@@ -4,35 +4,39 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"unicode"
 )
 
+var in = bufio.NewScanner(os.Stdin)
+
+func nextInt() int {
+	in.Scan()
+	n, _ := strconv.Atoi(in.Text())
+	return n
+}
+
 func main() {
-	reader := bufio.NewReader(os.Stdin)
+	//in.Split(bufio.ScanWords)
+	br := bufio.NewReader(os.Stdin)
+	bw := bufio.NewWriter(os.Stdout)
+	defer bw.Flush()
+	br.ReadString('\n')
 
-	// 첫 줄은 필요 없으므로 무시
-	reader.ReadString('\n')
+	S, _ := br.ReadString('\n')
 
-	// 두 번째 줄 입력
-	line, _ := reader.ReadString('\n')
+	var ans, tmp int64
 
-	var sum, num int64
-	hasDigit := false
-
-	for _, c := range line {
+	for _, c := range S {
 		if unicode.IsDigit(c) {
-			num = num*10 + int64(c-'0')
-			hasDigit = true
-		} else if hasDigit {
-			sum += num
-			num = 0
-			hasDigit = false
+			tmp = tmp*10 + int64(c-'0')
+		} else {
+			ans += tmp
+			tmp = 0
 		}
 	}
+	ans += tmp
 
-	if hasDigit {
-		sum += num
-	}
+	fmt.Fprintln(bw, ans)
 
-	fmt.Println(sum)
 }
