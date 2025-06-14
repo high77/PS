@@ -1,11 +1,9 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
 
     static class TrieNode {
-        Map<Character, TrieNode> children = new HashMap<>();
-        boolean isEndOfWord = false;
+        TrieNode[] children = new TrieNode[26];
     }
 
     static class Trie {
@@ -13,17 +11,19 @@ public class Main {
 
         void insert(String word) {
             TrieNode node = root;
-            for (char ch : word.toCharArray()) {
-                node = node.children.computeIfAbsent(ch, c -> new TrieNode());
+            for (int i = 0; i < word.length(); i++) {
+                int index = word.charAt(i) - 'a';
+                if (node.children[index] == null) node.children[index] = new TrieNode();
+                node = node.children[index];
             }
-            node.isEndOfWord = true;
         }
 
         boolean startsWith(String prefix) {
             TrieNode node = root;
-            for (char ch : prefix.toCharArray()) {
-                if (!node.children.containsKey(ch)) return false;
-                node = node.children.get(ch);
+            for (int i = 0; i < prefix.length(); i++) {
+                int index = prefix.charAt(i) - 'a';
+                if (node.children[index] == null) return false;
+                node = node.children[index];
             }
             return true;
         }
@@ -31,9 +31,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        String[] input = br.readLine().split(" ");
+        int N = Integer.parseInt(input[0]);
+        int M = Integer.parseInt(input[1]);
 
-        int N = Integer.parseInt(st.nextToken()), M = Integer.parseInt(st.nextToken());
         Trie trie = new Trie();
 
         for (int i = 0; i < N; i++) {
@@ -42,9 +43,7 @@ public class Main {
 
         int ans = 0;
         for (int i = 0; i < M; i++) {
-            if (trie.startsWith(br.readLine())) {
-                ans++;
-            }
+            if (trie.startsWith(br.readLine())) ans++;
         }
 
         System.out.println(ans);
