@@ -11,7 +11,7 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
         boolean[] check = new boolean[1000001],visited = new boolean[1000001];
         check[0] =check[1]= true;
-        for (int i=2;i<500001;i++) {
+        for (int i=2;i<1001;i++) {
             if (check[i]) continue;
             for (int j=i*2;j<=1000000;j+=i) check[j] = true;
         }
