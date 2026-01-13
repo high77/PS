@@ -6,6 +6,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         br.readLine();
-        System.out.println("100000000");
+        System.out.println("1000000000");
     }
 }
