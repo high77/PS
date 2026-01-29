@@ -8,8 +8,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder ans = new StringBuilder();
-        int T = Integer.parseInt(br.readLine().trim());
+        StringBuilder sb = new StringBuilder();
+        String line = br.readLine();
+        if (line == null) return;
+        int T = Integer.parseInt(line.trim());
 
         for (int t = 1; t <= T; t++) {
             M = Integer.parseInt(br.readLine().trim());
@@ -25,9 +27,10 @@ public class Main {
             }
 
             int turns = 0;
+            // 메모리 절약을 위해 String 대신 List<int[][]>나 커스텀 해시 사용 가능하지만,
+            // Small1 범위에서는 중복 체크용으로 아래 방식이 효율적입니다.
             Set<String> hist = new HashSet<>();
             while (true) {
-                // 1. 연쇄 제거
                 while (true) {
                     boolean chk = false;
                     for (int r = 0; r < M; r++) for (int c = 0; c < N; c++) {
@@ -42,34 +45,35 @@ public class Main {
                 for (int r = 0; r < M; r++) for (int c = 0; c < N; c++) if (a[r][c]) live++;
 
                 if (live == 0) {
-                    ans.append("Case #").append(t).append(": ").append(turns).append(" turns\n");
+                    sb.append("Case #").append(t).append(": ").append(turns).append(" turns\n");
                     break;
                 }
 
-                // 2. 무한 루프 감지
-                String s = Arrays.deepToString(g) + Arrays.deepToString(a);
+                // 메모리 핵심: 상태를 더 짧은 문자열로 압축하거나 해시값만 저장
+                String s = encodeState();
                 if (!hist.add(s)) {
-                    ans.append("Case #").append(t).append(": ").append(live).append(" children will play forever\n");
+                    sb.append("Case #").append(t).append(": ").append(live).append(" children will play forever\n");
                     break;
                 }
 
-                // 3. 동시 교환
                 int[][] ng = new int[M][N];
-                for (int r = 0; r < M; r++) for (int c = 0; c < N; c++) {
-                    if (a[r][c]) {
+                for (int r = 0; r < M; r++) {
+                    for (int c = 0; c < N; c++) {
+                        if (!a[r][c]) continue;
                         int nb = cnt(r, c);
                         ng[r][c] += g[r][c] - 12;
+                        int share = 12 / nb;
                         for (int d = 0; d < 4; d++) {
                             int nr = r + dr[d], nc = c + dc[d];
                             if (nr >= 0 && nr < M && nc >= 0 && nc < N && a[nr][nc])
-                                ng[nr][nc] += 12 / nb;
+                                ng[nr][nc] += share;
                         }
                     }
                 }
                 g = ng; turns++;
             }
         }
-        System.out.println(ans);
+        System.out.print(sb);
     }
 
     static int cnt(int r, int c) {
@@ -79,5 +83,17 @@ public class Main {
             if (nr >= 0 && nr < M && nc >= 0 && nc < N && a[nr][nc]) n++;
         }
         return n;
+    }
+
+    // Arrays.deepToString보다 메모리 효율적인 상태 요약
+    static String encodeState() {
+        StringBuilder tmp = new StringBuilder();
+        for (int r = 0; r < M; r++) {
+            for (int c = 0; c < N; c++) {
+                if (a[r][c]) tmp.append(g[r][c]).append(',');
+                else tmp.append('X');
+            }
+        }
+        return tmp.toString();
     }
 }
