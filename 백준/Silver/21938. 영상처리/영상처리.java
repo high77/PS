@@ -27,23 +27,21 @@ public class Main {
         }
         int T = Integer.parseInt(br.readLine());
         for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) arr[i][j] = arr[i][j] >= T ? 255 : 0;
+            for (int j = 0; j < M; j++) arr[i][j] = arr[i][j] >= T ? 1: 0;
         }
-        boolean[][] visit = new boolean[N][M];
         Queue<Node> q = new LinkedList<>();
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                if (visit[i][j]) continue;
-                if (arr[i][j] != 255) continue;
+                if (arr[i][j] != 1) continue;
+                arr[i][j] = 0;
                 q.add(new Node(i, j));
-                visit[i][j] = true;
                 ans++;
                 while (!q.isEmpty()) {
                     Node now = q.poll();
                     for (int d = 0; d < 4; d++) {
                         int nx = now.x + dx[d], ny = now.y + dy[d];
-                        if (nx < 0 || ny < 0 || nx >= N || ny >= M || visit[nx][ny] || arr[nx][ny]==0) continue;
-                        visit[nx][ny] = true;
+                        if (nx < 0 || ny < 0 || nx >= N || ny >= M || arr[nx][ny]==0) continue;
+                        arr[nx][ny] = 0;
                         q.add(new Node(nx, ny));
                     }
                 }
