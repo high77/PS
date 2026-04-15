@@ -1,6 +1,5 @@
 class Solution {
-    public String solution(String S) {
-        String answer = "";
+    public StringBuilder solution(String S) {
         StringBuilder res = new StringBuilder();
         int l = S.length();
         for (int i=0;i<l;i++){
@@ -12,7 +11,7 @@ class Solution {
             }
             res.append((char)c);
         }
-        answer = res.toString();
-        return answer;
+        
+        return res;
     }
 }
