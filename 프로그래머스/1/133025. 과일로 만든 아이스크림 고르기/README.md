@@ -1,10 +1,10 @@
 # [level 1] 과일로 만든 아이스크림 고르기 - 133025 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/133025) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/133025?language=oracle) 
 
 ### 성능 요약
 
-메모리: 0.0 MB, 시간: 0.00 ms
+메모리: undefined, 시간: 
 
 ### 구분
 
@@ -12,11 +12,11 @@
 
 ### 채점결과
 
-Empty
+합계: 100.0 / 100.0
 
 ### 제출 일자
 
-2024년 08월 17일 16:20:25
+2026년 04월 29일 21:58:10
 
 ### 문제 설명
 
